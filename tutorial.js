@@ -1,11 +1,6 @@
 function showTutorial(index) {
     //if the user hits enter, move to the next step of the tutorial. If the tutorial is complete. Start the game and allow text input.
   
-    // skip tutorial for debug purposes
-    gameStarted = true
-    cli.contentEditable = true
-    return
-  
     switch (index) {
       case 0:
         outputText("Welcome to \'Prison Break\'. (hit ENTER to proceed past each step of the tutorial)")

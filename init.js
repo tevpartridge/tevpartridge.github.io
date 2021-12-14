@@ -26,7 +26,7 @@ constructor(label, isLocked, isOpen, location, orientation, canOpen) {
 }
 }
 
-var rooms = [], currentPosition, items = [], doors = [], itemToUse, doorToUse, newPara, tutorialIndex = 0, escapeIndex = 0, gameStarted = false, gameFinished = false
+var rooms = [], currentPosition, items = [], doors = [], itemToUse, doorToUse, newPara, tutorialIndex = 0, escapeIndex = 0, gameStarted = false, holdInput = false, gameEnded = false
 
 const MAP_WIDTH = 8
 const MAP_SIZE = 24
@@ -103,4 +103,5 @@ currentPosition = 39
 items[2].location = INVENTORY
 items[16].location = INVENTORY
 items[21].location = INVENTORY
+items[0].location = INVENTORY
 }

@@ -3,9 +3,54 @@ function checkInput(e) {
   if (e.key == 'Enter') {
     command = cli.textContent;
     cli.innerHTML = ""
-    parser(command)
+    if (!gameEnded) {
+      parser(command)
+    } else {
+      endingCommandParser(command)
+    }
     e.stopPropagation()
     e.preventDefault()
+  }
+}
+
+function endingCommandParser(cmd) {
+  //command parser for unique commands used only in the ending - regular commands need to be ignored
+  let commandWords = cmd.trim().toUpperCase().split(" ")
+  switch (commandWords.length) {
+    case 1:
+      switch (commandWords[0]) {
+        case "":
+          if(escapeIndex != 3){
+            escapeIndex++
+            handleEscapeSequence(escapeIndex)
+          }else{
+            outputText("Don't just stand there.")
+          }
+          break
+        case "NO":
+          outputText("He's not going to take no for an answer.")
+      }
+      break
+    case 2:
+      switch (commandWords[0]) {
+        case "HOLD":
+          switch (commandWords[1]) {
+            case "IT":
+              if (escapeIndex == 3) {
+                escapeIndex++
+                handleEscapeSequence(escapeIndex)
+              }
+              break
+            default:
+              outputText("He wants you to hold the spoon.")
+          }
+          break
+        default:
+          outputText("He's just asking you to hold the spoon.")
+      }
+      break
+    default:
+      outputText("Just say you'll hold the spoon already.")
   }
 }
 
@@ -13,7 +58,7 @@ function parser(cmd) {
   // check which command the player has inputted and deal with it accordingly.
   // output an error message if the command is invalid
 
-  let commandWords = cmd.trim().toUpperCase().split(" ");
+  let commandWords = cmd.trim().toUpperCase().split(" ")
   switch (commandWords.length) {
     case 1:
       switch (commandWords[0]) {
@@ -60,10 +105,6 @@ function parser(cmd) {
         case "":
           tutorialIndex++
           showTutorial(tutorialIndex)
-          if (gameFinished) {
-            escapeIndex++
-            handleEscapeSequence(escapeIndex)
-          }
           break
         default:
           outputText("I don't know how to \"" + cmd + "\"")
@@ -136,8 +177,8 @@ function parser(cmd) {
           } else {
             unlockDoor(commandWords[1])
           }
-        default:
-          outputText("I don't know how to \"" + commandWords[0].toLowerCase() + "\"")
+          default:
+            outputText("I don't know how to \"" + commandWords[0].toLowerCase() + "\"")
       }
       break
     default:
@@ -322,7 +363,6 @@ function lookAt(inp) {
   }
 }
 
-
 function moveRoom(chosenDir) {
   //check if the current room has an exit in the direction that is submitted
   if (rooms[currentPosition].exits.includes(chosenDir.charAt(0))) {
@@ -456,11 +496,12 @@ function letterByLetter(targetEl, txt, charIndex) {
   targetEl.innerHTML += txt[charIndex]
   if (charIndex < txt.length - 1) {
     cli.contentEditable = false
-    setTimeout(function () { letterByLetter(targetEl, txt, charIndex + 1) }, 100 - textSpeed)
-  } else if (gameStarted) {
+    setTimeout(function () {
+      letterByLetter(targetEl, txt, charIndex + 1)
+    }, 100 - textSpeed)
+  } else if (gameStarted && !holdInput) {
     cli.contentEditable = true
     cli.focus()
   }
   newPara.scrollIntoView();
 }
-
